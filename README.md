@@ -4,6 +4,8 @@ TruFit is a portfolio prototype for an AI tool that turns photos of a broken or 
 
 This is a design demo. Photos, reconstruction and 3D placement are simulated with sample data. The flow and interface are real; the AI results are not.
 
+**Live demo:** https://tru-fit-sigma.vercel.app
+
 ## The flow
 
 1. **Capture**: add photos of the environment (a sample set is provided).
