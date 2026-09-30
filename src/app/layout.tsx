@@ -12,9 +12,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description = "Replacement parts, sized from photos. Measured vs. inferred, always labeled.";
+
 export const metadata: Metadata = {
-  title: { default: "TruFit", template: "%s · TruFit" },
-  description: "TruFit turns photos of a broken or missing part into a print-ready replacement, and always shows what was measured versus inferred. A portfolio demo with simulated data.",
+  metadataBase: new URL("https://tru-fit-sigma.vercel.app"),
+  title: { default: "TruFit - Capture and 3D Fitting", template: "%s · TruFit" },
+  description,
+  openGraph: { title: "TruFit - Capture and 3D Fitting", description, siteName: "TruFit", type: "website" },
+  twitter: { card: "summary_large_image", title: "TruFit - Capture and 3D Fitting", description },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
