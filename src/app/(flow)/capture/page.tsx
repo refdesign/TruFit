@@ -28,18 +28,11 @@ const SAMPLE_SET: { view: View; label: string; photo: Photo }[] = [
 export default function CapturePage() {
   const router = useRouter();
   const [buckets, setBuckets] = useState<Bucket[]>(initial);
-  const [pickerId, setPickerId] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const counter = useRef(1);
 
-  const open = (id: string) => {
-    setPickerId(id);
-    dialog.current?.showModal();
-  };
-  const close = () => {
-    dialog.current?.close();
-    setPickerId(null);
-  };
+  const open = () => dialog.current?.showModal();
+  const close = () => dialog.current?.close();
 
   // Keep exactly one empty "More" bucket at the end; number the More buckets.
   const normalize = (list: Bucket[]) => {
@@ -48,11 +41,6 @@ export default function CapturePage() {
     counter.current += 1;
     const empty: Bucket = { id: `more-${counter.current}`, view: "more", label: "More", photo: null };
     return [...fixed, ...mores.map((b, i) => ({ ...b, label: `More ${i + 1}` })), { ...empty, label: mores.length ? `More ${mores.length + 1}` : "More" }];
-  };
-
-  const assign = (photo: Photo) => {
-    setBuckets((prev) => normalize(prev.map((b) => (b.id === pickerId ? { ...b, photo } : b))));
-    close();
   };
 
   const addSampleSet = () => {
@@ -72,7 +60,6 @@ export default function CapturePage() {
   const remove = (id: string) => setBuckets((prev) => normalize(prev.map((b) => (b.id === id ? { ...b, photo: null } : b))));
 
   const filled = buckets.filter((b) => b.photo).length;
-  const picking = buckets.find((b) => b.id === pickerId) ?? null;
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -97,7 +84,7 @@ export default function CapturePage() {
         {buckets.map((b) => (
           <li key={b.id} className="relative">
             <button
-              onClick={() => open(b.id)}
+              onClick={open}
               aria-label={b.photo ? `${b.label} photo added. Replace` : `Add ${b.label} photo`}
               className={`group relative flex aspect-[4/3] w-full flex-col items-center justify-center overflow-hidden rounded-xl border text-sm transition-colors ${
                 b.photo ? "border-line" : "border-dashed border-mute/50 bg-panel text-mute hover:border-brand hover:bg-brand-soft hover:text-brand-dark"
@@ -147,13 +134,12 @@ export default function CapturePage() {
         {filled < MIN_PHOTOS && <span className="sr-only"> (add at least {MIN_PHOTOS} photos first)</span>}
       </button>
 
-      <dialog ref={dialog} onClose={() => setPickerId(null)} className="m-auto w-[min(92vw,34rem)] rounded-2xl border border-line bg-panel p-0 text-ink shadow-2xl backdrop:bg-black/40">
-        {picking && (
-          <div className="p-5">
+      <dialog ref={dialog} className="m-auto w-[min(92vw,34rem)] rounded-2xl border border-line bg-panel p-0 text-ink shadow-2xl backdrop:bg-black/40">
+        <div className="p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-base font-semibold">Add photos</h2>
-                <p className="mt-0.5 text-sm text-mute">Demo mode: add the sample set, or preview one photo from your device.</p>
+                <p className="mt-0.5 text-sm text-mute">Demo mode: add the sample photo set.</p>
               </div>
               <button onClick={close} aria-label="Close" className="rounded-full p-1.5 text-mute hover:bg-panel2">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
@@ -180,21 +166,7 @@ export default function CapturePage() {
                 <span className="text-xs font-semibold text-brand-dark">Add all</span>
               </span>
             </button>
-
-            <label className="mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-mute/50 px-3 py-3 text-sm font-medium text-mute hover:border-brand hover:text-brand-dark">
-              Upload to {picking.label} from device (preview only)
-              <input
-                type="file"
-                accept="image/*"
-                className="sr-only"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) assign({ src: URL.createObjectURL(f), name: f.name });
-                }}
-              />
-            </label>
-          </div>
-        )}
+        </div>
       </dialog>
     </div>
   );

@@ -1,7 +1,7 @@
 // Overlay geometry for /samples/gearbox-front.png, in that image's pixel space (900 x 600).
 export const SCENE = {
   src: "/samples/gearbox-front.png",
-  wireframe: "/samples/reconstruct-wireframe.png", // same 3:2 framing; Reconstruct uses this
+  wireframe: "/samples/reconstruct-wireframe.gif", // same 3:2 framing; Reconstruct uses this
   w: 900,
   h: 600,
   mmPerPx: 0.68,
