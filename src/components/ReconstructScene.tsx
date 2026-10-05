@@ -1,6 +1,6 @@
 "use client";
 import { fmt, isRadiusRow, type Row } from "@/lib/measurements";
-import { SCENE, SPOTS } from "@/lib/scene";
+import { QUARTER, SCENE, SPOTS } from "@/lib/scene";
 
 const px = (v: number, of: number) => `${(v / of) * 100}%`;
 
@@ -39,7 +39,19 @@ export function ReconstructScene({
               )}
             </g>
           ))}
+          {/* The scale reference: a drawn quarter on the ledge, where it sat in the photos. */}
+          <circle cx={QUARTER.x} cy={QUARTER.y} r={QUARTER.r + 6} fill="none" stroke="#000" strokeOpacity="0.75" strokeWidth="7" />
+          <circle cx={QUARTER.x} cy={QUARTER.y} r={QUARTER.r} fill="#9fd0ff" fillOpacity="0.4" stroke="#d6e9ff" strokeWidth="2" />
+          <circle cx={QUARTER.x} cy={QUARTER.y} r={QUARTER.r * 0.68} fill="none" stroke="#d6e9ff" strokeOpacity="0.75" strokeWidth="1.2" />
+          <circle cx={QUARTER.x} cy={QUARTER.y} r={QUARTER.r + 6} fill="none" stroke="#4d9bff" strokeWidth="3" strokeDasharray="6 4" />
         </svg>
+
+        <span
+          className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-md bg-measured px-1.5 py-1 text-[10px] font-semibold text-white shadow sm:px-2 sm:text-xs"
+          style={{ left: px(QUARTER.chip.x, SCENE.w), top: px(QUARTER.chip.y, SCENE.h) }}
+        >
+          <span aria-hidden>🔒</span> US quarter · Ø 24.26 mm
+        </span>
 
         {rows.map((row) => {
           const s = SPOTS[row.key];
